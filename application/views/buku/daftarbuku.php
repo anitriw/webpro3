@@ -1,3 +1,9 @@
+<?php if(validation_errors()){?>
+               <div class="alert alert-danger" role="alert">
+                    <?= validation_errors();?>
+                </div>
+            <?php }?>
+
 <?= $this->session->flashdata('pesan'); ?>
 		<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-left my-5">
@@ -43,6 +49,7 @@
 									</div>
 								</div>
 							</div> <?php } ?>
+
 						<!-- end looping -->
 					</div>
 
