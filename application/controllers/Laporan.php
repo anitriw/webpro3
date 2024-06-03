@@ -69,6 +69,40 @@ public function laporan_buku_pdf(){
       'buku'=>$this->ModelBuku->getBuku()->result_array());
       $this->load->view('buku/export_excel_buku',$data);
   }
+  public function cetak_laporan_pinjam(){
+    $data['laporan'] =$this->db->query("select*from pinjam p,detail_pinjam d, buku b, user u where
+   d.id_buku=b.id and p.id_user=u.id and p.no_pinjam=d.no_pinjam")->result_array();
+    $this->load->view('pinjam/laporan-print-pinjam',$data);
+   }
+   public function laporan_pinjam_pdf(){
+    $data['laporan'] =$this->db->query("select*from pinjam p,detail_pinjam d, buku b, user u where d.id_buku=b.id and p.id_user=u.id and p.no_pinjam=d.no_pinjam")->result_array();
+  
+      // script untuk dompdf php versi 7.1.0 keatas
+      $sroot      = $_SERVER['DOCUMENT_ROOT'];
+      include $sroot."/pustaka-booking/application/third_party/dompdf/autoload.inc.php";
+      $dompdf = new Dompdf\Dompdf();
+  
+      $this->load->view('pinjam/laporan-pdf-pinjam', $data);
+  
+      $paper_size  = 'A4'; // ukuran kertas
+      $orientation = 'landscape'; //tipe format kertas potrait atau landscape
+      $html = $this->output->get_output();
+  
+      $dompdf->set_paper($paper_size, $orientation);
+      // Convert to PDF
+      $dompdf->load_html($html);
+      $dompdf->render();
+      $dompdf->stream("laporan data peminjaman.pdf", array('Attachment' => 0));
+      // nama file pdf yang di hasilkan
+  }
+  public function export_excel_pinjam(){
+    $data=array(
+      'title'=>'Laporan Data Peminjaman Buku',
+      'laporan'=>$this->db->query("select*from pinjam p,detail_pinjam d, buku b, user u where d.id_buku=b.id and p.id_user=u.id and p.no_pinjam=d.no_pinjam")->result_array());
+      $this->load->view('pinjam/export-excel-pinjam',$data);
+  }
+  
+  
   
   
   
